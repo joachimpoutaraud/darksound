@@ -7,120 +7,32 @@ Collection of functions to load the configuration file
 # Authors:  Felix MICHAUD   <felixmichaudlnhrdt@gmail.com>
 #           Sylvain HAUPERT <sylvain.haupert@mnhn.fr>
 #           Joachim POUTARAUD <joachipo@imv.uio.no>
-#
-# License: New BSD License
 
-#%%
-# general packages
 import sys
 import os
-
-# basic packages
 import yaml
-import bambird
-
-#%%
 
 RANDOM_SEED = 1979  # Fix the random seed to be able to repeat the results
-
-PARAMS_XC = {
-    'PARAM_XC_LIST': ['len:"20-60"', 'q:">C"', 'type:"song"'],
-    'NUM_FILES': 20,
-    'CSV_XC_FILE': 'xc_metadata.csv'
-}
-
-PARAMS_EXTRACT = {
-    "FUNC" : bambird.extract_rois_full_sig,
-    # Extract Audio resampling
-    "SAMPLE_RATE": 48000,  # Sampling frequency in Hz
-    # Audio preprocess
-    "LOW_FREQ": 250,  # Low frequency in Hz of the bandpass filter applied to the audio
-    "HIGH_FREQ": 12000,  # High frequency in Hz of the bandpass filter applied to the audio
-    # butterworth filter order to select the bandwidth corresponding to the ROI
-    "BUTTER_ORDER": 1,
-    # Max duration of the audio files that we will use to compute the features
-    "AUDIO_DURATION": 30,
-    # Split the audio signal of chunk with duration = SIGNAL LENGTH (in second)
-    "CHUNK_DURATION": 10,
-    "OVLP": 0,  # Define the overlap ratio between each chunk
-    # Spectrogram
-    # Mode to compute the remove_background ('mean', 'median')
-    "MODE_RMBCKG": "median",
-    # Number of points used to compute the running mean of the noise profil
-    "N_RUNNING_MEAN": 10,
-    "NFFT": 1024,  # Number of points of the spectrogram
-    # Combination of parameters for ROIs extraction
-    "MASK_PARAM1": 26,  # 30 37
-    "MASK_PARAM2": 10,  # 20 33
-    # Select and merge bbox parameters
-    "MAX_RATIO_YX": 7,      # ratio Y/X between the high (Y in px) and the width (X in px) of the ROI
-    "MIN_DURATION": 0.1,    # minimum event duration in s
-    "MARGIN_T_LEFT": 0.2,
-    "MARGIN_T_RIGHT": 0.2,
-    "MARGIN_F_TOP": 250,
-    "MARGIN_F_BOTTOM": 250,
-    # save parameters
-    "MARGIN_T": 0.1,  # time margin in s around the ROI
-    "MARGIN_F": 250,  # frequency margin in Hz around the ROI
-    # butterworth filter order to select the bandwidth corresponding to the ROI
-    "FILTER_ORDER": 5,
-}
-
-PARAMS_FEATURES = {
-    # Extract Audio resampling
-    "SAMPLE_RATE": 48000,  # Sampling frequency in Hz
-    # Audio preprocess
-    "LOW_FREQ": 250,  # Low frequency in Hz of the bandpass filter applied to the audio
-    "HIGH_FREQ": 11000,  # High frequency in Hz of the bandpass filter applied to the audio
-    # butterworth filter order to select the bandwidth corresponding to the ROI
-    "BUTTER_ORDER": 1,
-    # Spectrogram
-    "NFFT": 1024,  
-    # Number of points of the spectrogram
-    "SHAPE_RES": "high",
-}
-
-PARAMS_CLUSTER = {
-    "FEATURES": ['shp', 'centroid_f'],  # choose the features used to cluster {'shp', 'centroid_f', 'peak_f', 'duration_t', 'bandwidth_f', 'bandwidth_min_f', 'bandwidth_max_f', 'min_f', 'max_f' } 
-    "PERCENTAGE_PTS": 5,                 # minimum number of ROIs to form a cluster (in % of the total number of ROIs) {number between 0 and 1 or blank}
-    "MIN_PTS": None,                     # minimum number of ROIs to form a cluster {integer or blank}
-    "METHOD": "DBSCAN",                 # HDBSCAN or DBSCAN
-    "SCALER": "MINMAXSCALER",           # STANDARDSCALER or ROBUSTSCALER or MINMAXSCALER
-    "KEEP":   "BIGGEST",                # ALL or BIGGEST
-    "EPS":    "auto"                    # set the maximum distance between elements in a single clusters {a number or 'auto'}
-}
 
 PARAMS_MODEL = {
     "DEVICE": "cpu",
     "BATCH_SIZE": 256,
     "N_WORKERS": 0,
-    "N_WAY": 15,
+    "N_WAY": 5,
     "N_SHOT": 5,
     "N_QUERY": 1,
     "N_TASKS": 100,
     "N_EPOCHS": 200,
     "EARLY_STOP_THRESH": 5,
-    "SCHEDULER_MILESTONES": [150, 180],
-    "SCHEDULER_GAMMA": 0.1,
-    "LEARNING_RATE": 1e-03,
+    "SCHEDULER_FACTOR": 0.1,
+    "SCHEDULER_PATIENCE": 5,
+    "LEARNING_RATE": 0.0001,
     "TRAINING": "classical",
     "PRETRAINED": True,
     "HPSS": True,
     "REMOVE_BG": True,
     "MODEL": "prototypical"
 }
-
-
-PARAMS = {
-    'RANDOM_SEED' : RANDOM_SEED,
-    'PARAMS_XC' : PARAMS_XC,
-    'PARAMS_EXTRACT' : PARAMS_EXTRACT,
-    'PARAMS_FEATURES' : PARAMS_FEATURES,
-    'PARAMS_CLUSTER' : PARAMS_CLUSTER,
-    'PARAMS_MODEL'  : PARAMS_MODEL
-    }
-
-#%%
 
 """ ===========================================================================
 
@@ -178,23 +90,11 @@ def load_config(fullfilename = None):
         Dictionary with all the parameters that are required for the bambird's
         functions
     """    
-    
-    global PARAMS  
-    global RANDOM_SEED
-    global PARAMS_XC
-    global PARAMS_EXTRACT
-    global PARAMS_FEATURES
-    global PARAMS_CLUSTER
     global PARAMS_MODEL
     
     if os.path.isfile(str(fullfilename)): 
         with open(fullfilename) as f:
             PARAMS = yaml.load(f, Loader=_get_loader())
-            RANDOM_SEED = PARAMS['RANDOM_SEED']
-            PARAMS_XC = PARAMS['PARAMS_XC']
-            PARAMS_EXTRACT = PARAMS['PARAMS_EXTRACT']
-            PARAMS_FEATURES = PARAMS['PARAMS_FEATURES']
-            PARAMS_CLUSTER = PARAMS['PARAMS_CLUSTER']
             PARAMS_MODEL = PARAMS['PARAMS_MODEL']
     else :
         print("The config file {} could not be loaded. Default parameters are loaded".format(fullfilename))
@@ -204,11 +104,7 @@ def load_config(fullfilename = None):
 def get_config() :
     PARAMS = {
         'RANDOM_SEED' : RANDOM_SEED,
-        'PARAMS_XC' : PARAMS_XC,
-        'PARAMS_EXTRACT' : PARAMS_EXTRACT,
-        'PARAMS_FEATURES' : PARAMS_FEATURES,
-        'PARAMS_CLUSTER' : PARAMS_CLUSTER,
-        'PARAMS_MODEL'   : PARAMS_MODEL
+        'PARAMS_MODEL' : PARAMS_MODEL
         }
     return PARAMS
 
