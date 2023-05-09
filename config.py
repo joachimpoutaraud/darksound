@@ -7,7 +7,7 @@ Collection of functions to load the configuration file
 # Authors:  Felix MICHAUD   <felixmichaudlnhrdt@gmail.com>
 #           Sylvain HAUPERT <sylvain.haupert@mnhn.fr>
 #           Joachim POUTARAUD <joachipo@imv.uio.no>
-
+#
 import sys
 import os
 import yaml
@@ -15,8 +15,6 @@ import yaml
 RANDOM_SEED = 1979  # Fix the random seed to be able to repeat the results
 
 PARAMS_MODEL = {
-    "DEVICE": "cpu",
-    "BATCH_SIZE": 256,
     "N_WORKERS": 0,
     "N_WAY": 5,
     "N_SHOT": 5,

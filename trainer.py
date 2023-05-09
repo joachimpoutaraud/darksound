@@ -17,9 +17,15 @@ def compute_score(model, images, labels, loss_fn, optimizer, device):
     optimizer.zero_grad()
     # Get the correct prediction scores
     scores = model(images.to(device))
-    correct = (torch.max(scores.detach().data, 1)[1] == labels).sum().item()
-    # Compute loss
-    loss = loss_fn(scores, labels.to(device))
+    correct = (torch.argmax(scores.detach().data, 1) == labels.to(device)).sum().item()
+
+    if type(loss_fn) == nn.modules.loss.MSELoss or type(loss_fn) == torch.nn.modules.loss.KLDivLoss:
+        # Compute one-hot encoded vector 
+        one_hot = nn.functional.one_hot(labels.to(device))
+        loss = loss_fn(scores.to(torch.float64), one_hot.to(torch.float64))
+    else:
+        loss = loss_fn(scores, labels.to(device))
+
     # Backward propagation for calculating gradients
     loss.backward()
     # Update the weights
@@ -37,13 +43,12 @@ def trainer(model: FewShotClassifier,
     
     ###### TRAINING ######
     if train:
-        model.train()
-
         train_loss = []
         train_accuracy = []
         total_predictions = 0
         correct_predictions = 0
 
+        model.train()
         if training == 'classical':
             with tqdm(data_loader, total=len(data_loader), desc="Classical Training") as tqdm_train:
                 for images, labels in tqdm_train:
@@ -55,7 +60,7 @@ def trainer(model: FewShotClassifier,
                     train_accuracy.append(correct_predictions / total_predictions)
                     train_loss.append(loss.item())
                     # Log loss in real time
-                    tqdm_train.set_postfix(loss=np.mean(train_loss))
+                    tqdm_train.set_postfix(loss=np.mean(train_loss), acc=np.mean(train_accuracy))
             return np.mean(train_loss), np.mean(train_accuracy)
         
         if training == 'episodic':
@@ -70,7 +75,7 @@ def trainer(model: FewShotClassifier,
                     train_accuracy.append(correct_predictions / total_predictions)
                     train_loss.append(loss.item())
                     # Log loss in real time
-                    tqdm_train.set_postfix(loss=np.mean(train_loss)) 
+                    tqdm_train.set_postfix(loss=np.mean(train_loss), acc=np.mean(train_accuracy))
             return np.mean(train_loss), np.mean(train_accuracy)
     
     ###### EVALUATING ######
@@ -88,8 +93,14 @@ def trainer(model: FewShotClassifier,
                 model.process_support_set(support_images.to(device), support_labels.to(device)) 
                 scores = model(query_images.to(device)).detach()
                 # Compute loss
-                loss = loss_fn(scores, query_labels.to(device))
-                correct = (torch.max(scores.detach().data, 1)[1] == query_labels).sum().item()
+                if type(loss_fn) == nn.modules.loss.MSELoss:
+                    # Compute one-hot encoded vector for calculating MSE loss
+                    one_hot = nn.functional.one_hot(query_labels.to(device))
+                    loss = loss_fn(scores.to(torch.float64), one_hot.to(torch.float64))
+                else:
+                    loss = loss_fn(scores, query_labels.to(device))
+                    
+                correct = (torch.max(scores.detach().data, 1)[1] == query_labels.to(device)).sum().item()
                 # Get the predicted labels
                 predicted_labels = torch.max(scores.data, 1)[1]
                 labels += query_labels.tolist()
@@ -99,11 +110,10 @@ def trainer(model: FewShotClassifier,
                 test_accuracy.append(correct_predictions / total_predictions)
                 test_loss.append(loss.item())
                 # Log accuracy in real time
-                tqdm_eval.set_postfix(accuracy=correct_predictions / total_predictions)
-
+                tqdm_eval.set_postfix(acc=correct_predictions / total_predictions)
         if verbose:
-            print(metrics.classification_report(labels, predictions, digits=3))
-
+            performance = metrics.classification_report(labels, predictions, digits=3, output_dict=True)
+            return performance, np.mean(test_accuracy)
         return np.mean(test_loss), np.mean(test_accuracy)
 
 

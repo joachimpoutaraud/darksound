@@ -3,9 +3,12 @@ plotly
 https://github.com/ear-team/bambird/archive/refs/heads/production.zip
 librosa
 torch
+optuna
 torchaudio
 torchvision
 tensorboard
 scikit-maad
 scikit-image<0.20
 audiomentations
+joblib>=1.0
+pyJoules

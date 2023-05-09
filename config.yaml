@@ -1,31 +1,37 @@
 #=================================================================================================
-#
-# Config file to train Few-Shot Learning (FSL) algorithms
-#
+# Config file to train Meta-Learning algorithm
 #=================================================================================================
 
-RANDOM_SEED: 1979                # Fixed random seed
+RANDOM_SEED: 1979
 
-################################
-# TRAINING FEW-SHOT CLASSIFIER
-################################
+# -------------------------------------------------------------------------
+# TRAINING META-LEARNING ALGORITHM
+# -------------------------------------------------------------------------
 PARAMS_MODEL:
-  DEVICE: "cpu"
-  BATCH_SIZE: 128
-  N_WORKERS: 0
-  N_WAY: 5
+  MODEL: 'matching' # matching, prototypical or relation
+  TRAINING: 'episodic' # classical or episodic
+  N_WORKERS: 28
+  N_WAY: 20
   N_SHOT: 5
   N_QUERY: 1
   N_TASKS: 100
-  N_EPOCHS: 200
+  N_EPOCHS: 20 
   EARLY_STOP_THRESH: 10
   SCHEDULER_FACTOR: 0.1
   SCHEDULER_PATIENCE: 5
-  LEARNING_RATE: 0.0001
-  TRAINING: "episodic"  # classical or episodic
+  LEARNING_RATE: 0.000028
+  VALIDATION: True
   PRETRAINED: True
-  # Audio preprocess
+  # Measurements 
+  TENSORBOARD: False
+  ENERGY_CONSUMPTION: False
+  # Audio preprocessing
   HPSS: True
   REMOVE_BG: False
-  # Few-Shot Classifier 
-  MODEL: 'prototypical'  # matching, prototypical or relation
+
+# -------------------------------------------------------------------------
+# META EMBEDDED CLUSTERING
+# -------------------------------------------------------------------------
+  FEATURE_EXTRACTOR: 'models/matching-networks-20way-5shot-episodic.pt'
+  N_ITERATIONS: 20
+  AUGMENTATION: False

@@ -1,14 +1,11 @@
 import os
 import numpy as np
-from PIL import ImageDraw, Image
 from typing import Any, Callable, List, Optional, Tuple
 
 import torch
-import torch.nn as nn
-
+from torch import nn
 import torchaudio
 import torchaudio.transforms as T
-
 from torchvision.datasets.vision import VisionDataset
 from torchvision.datasets.utils import check_integrity, download_and_extract_archive, list_dir, list_files
 
@@ -40,8 +37,8 @@ class Darksound(VisionDataset):
 
     folder = "darksound"   
     zips_md5 = {"train":"b95ebadd31bdc149adc8d07fe779eeeb", 
-                "val":"8dd28a40a310eadd250a2c0a5051e0a2", 
-                "test":"9d394d2968ef4fb0399e00cc82b16f4b"}
+                "val":"846f5d7457525012b94e7e9b5c215705", 
+                "test":"6dbd0cc8950fed84ff91d17da6d8c994"}
 
     def __init__(
         self,
@@ -49,7 +46,7 @@ class Darksound(VisionDataset):
         split: str = 'train',
         hpss: bool = True,
         tfr: str = 'mel',
-        remove_background: bool = True,
+        remove_background: bool = False,
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         download: bool = False) -> None:
@@ -201,11 +198,11 @@ class Darksound(VisionDataset):
         zip_filename = self.split + ".zip"
         
         if self.split == 'train':
-            url = "" 
+            url = "https://drive.google.com/file/d/1GUgpDaf7AqzqIKwD9_Rb8sH643l1CrqQ/view?usp=share_link" 
         elif self.split == 'val':
-            url = "https://drive.google.com/file/d/1PPv537jE5wTlLN9-6V86B-1WgopQiPKe/view?usp=share_link"
+            url = "https://drive.google.com/file/d/1JPKfPUrPsXVS8mKFoGVGcDjYUuQ804B3/view?usp=share_link"
         elif self.split == 'test':
-            url = "https://drive.google.com/file/d/1PPv537jE5wTlLN9-6V86B-1WgopQiPKe/view?usp=share_link"
+            url = "https://drive.google.com/file/d/1DKXRf-Y2KbmkQ8Civ-mdiNa9mhykqqoS/view?usp=share_link"
         else:
             print("Dataset not found or corrupted. Enter either split='train, 'val' or 'test'.")
             

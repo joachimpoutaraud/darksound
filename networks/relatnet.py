@@ -55,7 +55,7 @@ class RelationNetworks(FewShotClassifier):
 
         # Here we build the relation module that will output the relation score for each
         # (query, prototype) pair. See the function docstring for more details.
-        self.relation_module = self.default_relation_module()
+        self.relation_module = (relation_module if relation_module else self.default_relation_module())
 
     def default_relation_module(self, inner_channels: int = 8):
         """
@@ -114,7 +114,7 @@ class RelationNetworks(FewShotClassifier):
             support_labels: labels of support set images
         """
 
-        support_features = list(self.backbone(support_images).values())[0]
+        support_features = list(self.backbone.forward(support_images).values())[0]
         self.prototypes = compute_prototypes(support_features, support_labels)
 
     def forward(self, query_images: Tensor) -> Tensor:
@@ -130,7 +130,7 @@ class RelationNetworks(FewShotClassifier):
         Returns:
             a prediction of classification scores for query images
         """
-        query_features = list(self.backbone(query_images).values())[0]
+        query_features = list(self.backbone.forward(query_images).values())[0]
 
         # For each pair (query, prototype), we compute the concatenation of their feature maps
         # Given that query_features is of shape (n_queries, n_channels, width, height), the

@@ -14,8 +14,8 @@ class DarksoundDataset(Dataset):
     """
     Abstract class for the Darksound dataset used in a context of Few-Shot Learning.
     The tools we use in few-shot learning, especially TaskSampler, expect an
-    implementation of DarksoundDataset.
-    Compared to PyTorch's Dataset, DarksoundDataset forces a method __getlabel__.
+    implementation of the DarksoundDataset class.
+    Compared to PyTorch's Dataset, the DarksoundDataset class forces a method __getlabel__.
     This exposes the list of all items labels and therefore allows to sample
     items depending on their label.
     """
@@ -41,7 +41,7 @@ class DarksoundDataset(Dataset):
 
 class TaskSampler(Sampler):
     """
-    Samples batches in the shape of few-shot classification tasks. At each iteration, it will sample
+    Samples batches in the shape of Few-Shot classification tasks. At each iteration, it will sample
     n_way classes, and then sample support and query images from these classes.
     """
 

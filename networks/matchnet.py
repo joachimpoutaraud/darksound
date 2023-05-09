@@ -112,15 +112,10 @@ class MatchingNetworks(FewShotClassifier):
         contextualized_query_embeddings = self.encode_query_embeddings(self.backbone(query_images))
 
         # Compute the matrix of cosine similarities between all query images and normalized support images
-        similarity_matrix = self.softmax(
-            contextualized_query_embeddings.mm(
-                nn.functional.normalize(self.contextualized_support_embeddings).T
-            )
-        )
-
-        # Compute query log probabilities based on cosine similarity to support instances
-        # and support labels
+        similarity_matrix = self.softmax(contextualized_query_embeddings.mm(nn.functional.normalize(self.contextualized_support_embeddings).T))
+        # Compute query log probabilities based on cosine similarity to support instances and support labels
         log_probabilities = (similarity_matrix.mm(self.one_hot_support_labels) + 1e-6).log()
+        
         return self.softmax_if_specified(log_probabilities)
 
     def encode_support_embeddings(
