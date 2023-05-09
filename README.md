@@ -8,7 +8,7 @@ Download [Anaconda](https://www.anaconda.com/products/distribution) and prepare 
 conda create --name darksound python=3.8
 conda activate darksound
 ```
-If you are on Windows, it might be preferable to install the `hdbscan` library beforehand.
+If you are on Windows, it might be preferable to install the [hdbscan](https://hdbscan.readthedocs.io/en/latest/index.html) library beforehand.
 ```
 conda install -c conda-forge hdbscan
 ```
@@ -20,7 +20,9 @@ pip install -r requirements.txt
 
 ## Usage
 ### Darksound Dataset
-The Darksound Dataset is build as an open-source and code-based dataset for the evaluation of Meta-Learning algorithms in the context of ecoacoustics with DL. The particularity of this dataset is that it is composed of acoustic units, also called Regions of Interest (ROIs), of 290 nocturnal and crepuscular bird species living in tropical environments. All the ROIs in the Darksound dataset have a sampling rate of 48 kHz and are faded in and out to avoid aliasing effects due to window effects. Moreover, each ROI is padded to a maximum duration of 3 seconds in order to obtain input images of equal size for training the model. The dataset is easily accessible and downloadable on [Kaggle](https://www.kaggle.com/datasets/joachipo/darksound) or can be directly downloaded using the programming language Python:
+The Darksound Dataset is build as an open-source and code-based dataset for the evaluation of Meta-Learning algorithms in the context of ecoacoustics with DL. The particularity of this dataset is that it is composed of acoustic units, also called Regions of Interest (ROIs), of 290 nocturnal and crepuscular bird species living in tropical environments. All the ROIs in the Darksound dataset have a sampling rate of 48 kHz and are faded in and out to avoid aliasing effects due to window effects. Moreover, each ROI is padded to a maximum duration of 3 seconds in order to obtain input images of equal size for training the model. 
+
+The dataset is easily accessible and downloadable on [Kaggle](https://www.kaggle.com/datasets/joachipo/darksound) or can be directly downloaded using the programming language Python:
 
 ```python
 from dataset.darksound import Darksound
@@ -46,7 +48,7 @@ Evaluation of the classification performances of the Meta-Learning algorithms ca
 Meta Embedded Clustering (MEC) method is proposed as an alternative to the DEC method introduced in ([Xie, et. al, 2016](https://arxiv.org/pdf/1511.06335.pdf)). MEC method is performed on the Darksound data set in order to refine the clusters of the 21 target species that are present in the test set. The objective of this method is to determine the final number of clusters in an unsupervised way in order to facilitate the identification and visualization of rare tropical bird species in unlabeled datasets. MEC method can be performed by indicating the desired parameters in the MEC section of the `config.yaml` file and running the following command:
 
 ```
-python training.py
+python iterator.py
 ```
 Evaluation of the clustering performances of the MEC method can be performed using this [notebook](https://github.com/joachimpoutaraud/darksound/blob/master/notebooks/03-clustering_evaluation.ipynb) and entering the path of the model weigths available in the `models` folder.
 
