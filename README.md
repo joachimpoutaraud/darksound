@@ -2,6 +2,8 @@
 
 This repository is associated to a Master's thesis carried out in 2023 at the University of Oslo (UiO) as part of the Music, Communication and Technology Master programme. The objective is to develop a new method to facilitate the work of ecoacousticians in managing large unlabeled acoustic datasets and to improve the identification of potential new taxa. Based on the advancement of Meta-Learning methods and unsupervised learning techniques integrated in the Deep Learning (DL) framework, the Meta Embedded Clustering (MEC) method is proposed in order to progressively discover and improve the inherent structure of unlabeled data. 
 
+![Meta Embedded Clustering (MEC)](https://raw.githubusercontent.com/joachimpoutaraud/darksound/master/notebooks/mec.jpg)
+
 ## Installation
 Download [Anaconda](https://www.anaconda.com/products/distribution) and prepare your environment using the command line.
 ```
