@@ -1,6 +1,9 @@
 """
+Adapted from 
+https://github.com/christopherjenness/DBCV
+https://github.com/XifengGuo/DEC-keras/blob/master/metrics.py
+
 Implimentation of Density-Based Clustering Validation "DBCV"
-Citation:
 Moulavi, Davoud, et al. "Density-based clustering validation."
 Proceedings of the 2014 SIAM International Conference on Data Mining.
 Society for Industrial and Applied Mathematics, 2014.
@@ -33,7 +36,6 @@ def DBCV(X, labels, dist_function=euclidean):
 def ACC(y_true, y_pred):
     """
     Calculate clustering accuracy
-    Adapted from https://github.com/XifengGuo/DEC-keras/blob/master/metrics.py
     
     # Arguments
         y: true labels, numpy.array with shape `(n_samples,)`

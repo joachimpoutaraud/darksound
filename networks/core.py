@@ -1,3 +1,8 @@
+"""
+Adapted from https://github.com/sicara/easy-few-shot-learning/tree/master 
+"""
+
+
 import copy
 from abc import abstractmethod
 from typing import Tuple

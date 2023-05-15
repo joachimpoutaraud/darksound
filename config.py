@@ -7,7 +7,7 @@ Collection of functions to load the configuration file
 # Authors:  Felix MICHAUD   <felixmichaudlnhrdt@gmail.com>
 #           Sylvain HAUPERT <sylvain.haupert@mnhn.fr>
 #           Joachim POUTARAUD <joachipo@imv.uio.no>
-#
+
 import sys
 import os
 import yaml
@@ -105,5 +105,3 @@ def get_config() :
         'PARAMS_MODEL' : PARAMS_MODEL
         }
     return PARAMS
-
-

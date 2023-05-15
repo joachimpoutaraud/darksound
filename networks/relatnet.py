@@ -1,6 +1,8 @@
 """
 See original implementation at
 https://github.com/floodsung/LearningToCompare_FSL
+Adapted from
+https://github.com/sicara/easy-few-shot-learning/blob/master/easyfsl/methods/relation_networks.py
 """
 
 import torch
