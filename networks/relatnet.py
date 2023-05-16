@@ -51,7 +51,7 @@ class RelationNetworks(FewShotClassifier):
 
         if len(self.backbone_output_shape) != 3:
             raise ValueError(
-                "Illegal backbone for Relation Networks. Expected output for an image is a 3-dim "
+                "Illegal backbone for Relation Networks. Expected output for an image is a 3-dim"
                 "tensor of shape (n_channels, width, height)."
             )
 
