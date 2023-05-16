@@ -12,3 +12,4 @@ scikit-image<0.20
 audiomentations
 joblib>=1.0
 pyJoules
+pandas<2.0
