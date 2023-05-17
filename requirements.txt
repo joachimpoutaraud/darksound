@@ -2,11 +2,13 @@ jupyter
 plotly
 https://github.com/ear-team/bambird/archive/refs/heads/production.zip
 optuna
+pyJoules
+joblib>=1.0
 torch
 torchaudio
 torchvision
 audiomentations
-joblib>=1.0
-pyJoules
-scikit-maad
+scikit-maad>=1.3.12
 scikit-image<0.20
+numpy==1.21
+pandas==1.3.5
